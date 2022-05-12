@@ -7,6 +7,7 @@ import { Alert, AlertTitle, AlertIcon } from "@chakra-ui/react";
 import { User } from "./interfaces/User"
 import Login from "./components/Login";
 import Home from "./components/Home";
+import Products from "./components/Home/Products";
 
 const api: AxiosInstance = axios.create({ baseURL: "http://localhost:1337/api/v1" });
 const updateBearer = (bearer: string) => api.defaults.headers.common["Authorization"] = "Bearer " + bearer;
@@ -26,10 +27,16 @@ const App = () => {
     if (err) console.error(err);
   }
 
+  const homeProps = { api, navigate, user, cookies, setIsErrorVisible, throwErr }
+
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={Home({ api, navigate, user, cookies, setIsErrorVisible, throwErr })} />
+        <Route path="/" element={Home(homeProps)} />
+        <Route path="/products" element={Home(homeProps)} />
+        <Route path="/categories" element={Home(homeProps)} />
+        <Route path="/orders" element={Home(homeProps)} />
+        <Route path="/users" element={Home(homeProps)} />
         <Route path="/login" element={Login({ api, updateBearer, navigate, setUser, cookies, setCookie, isLoading, setIsLoading, setIsErrorVisible, throwErr })} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>

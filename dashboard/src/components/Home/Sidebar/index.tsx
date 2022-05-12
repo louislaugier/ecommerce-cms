@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { IconButton, Box, CloseButton, Flex, Icon, useColorModeValue, Link, Drawer, DrawerContent, Text, useDisclosure } from '@chakra-ui/react';
+import * as Router from "react-router-dom";
+import { IconButton, Box, CloseButton, Flex, Icon, useColorModeValue, Link, Drawer, DrawerContent, Text, useDisclosure, propNames } from '@chakra-ui/react';
 import { FiBox, FiList, FiSend, FiUser, FiLogOut, FiMenu } from 'react-icons/fi';
-import { LinkItemProps, MobileProps, NavItemProps, SidebarProps } from '../../../interfaces/Props';
+import { BarProps, LinkItemProps, MobileProps, NavItemProps, SidebarProps } from '../../../interfaces/Props';
 
 const LinkItems: Array<LinkItemProps> = [
 	{ name: 'Products', icon: FiBox },
@@ -17,9 +17,9 @@ export default function Sidebar(props: SidebarProps) {
 	return (
 		<Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
 			<SidebarContent
+				setSelectedTab={props.setSelectedTab}
 				onClose={() => onClose}
-				display={{ base: 'none', md: 'block' }}
-			/>
+				display={{ base: 'none', md: 'block' }} />
 			<Drawer
 				autoFocus={false}
 				isOpen={isOpen}
@@ -29,7 +29,7 @@ export default function Sidebar(props: SidebarProps) {
 				onOverlayClick={onClose}
 				size="full">
 				<DrawerContent>
-					<SidebarContent onClose={onClose} />
+					<SidebarContent setSelectedTab={props.setSelectedTab} onClose={onClose} />
 				</DrawerContent>
 			</Drawer>
 			{/* mobilenav */}
@@ -38,7 +38,7 @@ export default function Sidebar(props: SidebarProps) {
 	);
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, setSelectedTab, ...rest  }: BarProps) => {
 	return (
 		<Box
 			bg={useColorModeValue('white', 'gray.900')}
@@ -54,10 +54,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				</Text>
 				<CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
 			</Flex>
-			{LinkItems.map((link) => (
-				<NavItem key={link.name} icon={link.icon}>
-					{link.name}
-				</NavItem>
+			{LinkItems.map((link, i) => (
+				<Router.Link onClick={setSelectedTab(i)} key={i} to={"/" + link.name.toLowerCase()}>
+					<NavItem key={link.name} icon={link.icon}>
+						{link.name}
+					</NavItem>
+				</Router.Link>
 			))}
 		</Box>
 	);

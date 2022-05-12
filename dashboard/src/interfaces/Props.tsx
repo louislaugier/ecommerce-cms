@@ -11,8 +11,9 @@ export interface LinkItemProps {
 	icon: IconType
 };
 
-export interface SidebarProps extends BoxProps {
-	onClose: () => void
+export interface BarProps extends BoxProps {
+	onClose: () => void,
+	setSelectedTab: React.Dispatch<React.SetStateAction<number>>
 };
 
 export interface NavItemProps extends FlexProps {
