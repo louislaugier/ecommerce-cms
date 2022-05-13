@@ -5,8 +5,8 @@ import { LoginProps } from "../../interfaces/Props";
 
 const Login = (props: LoginProps) => {
   useEffect(() => {
-		if (props.cookies["ecommerce_user"]) props.navigate("/")
-	}, []);
+    if (props.cookies["ecommerce_user"]) props.navigate("/")
+  }, []);
 
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
@@ -61,18 +61,18 @@ const Login = (props: LoginProps) => {
             </FormControl>
             <Button
               onClick={(e) => login()}
-              style={{marginTop: 25}}
+              style={{ marginTop: 25 }}
               bg={"blue.400"}
               color={"white"}
               _hover={{
                 bg: "blue.500",
-            }}>
+              }}>
               Login
             </Button>
           </Stack>
         </Box>
       </Stack>
-      
+
     </Flex>
   );
 }

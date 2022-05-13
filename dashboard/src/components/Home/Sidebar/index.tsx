@@ -38,7 +38,7 @@ export default function Sidebar(props: SidebarProps) {
 	);
 }
 
-const SidebarContent = ({ onClose, setSelectedTab, ...rest  }: BarProps) => {
+const SidebarContent = ({ onClose, setSelectedTab, ...rest }: BarProps) => {
 	return (
 		<Box
 			bg={useColorModeValue('white', 'gray.900')}

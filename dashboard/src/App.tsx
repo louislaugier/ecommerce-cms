@@ -41,7 +41,7 @@ const App = () => {
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
       {isErrorVisible ?
-        <Alert style={{ position: "absolute", bottom: 0 }} status="error">
+        <Alert className="Alert" status="error">
           <AlertIcon />
           <AlertTitle>{errorContent}</AlertTitle>
         </Alert>
