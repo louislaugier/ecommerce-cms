@@ -17,7 +17,7 @@ const App = () => {
 
   const [user, setUser] = useState<User | null>(null)
   const [cookies, setCookie, removeCookie] = useCookies<string>(["ecommerce_user", "ecommerce_bearer"]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isErrorVisible, setIsErrorVisible] = useState<boolean>(false);
   const [errorContent, setErrorContent] = useState<string | null>(null);
