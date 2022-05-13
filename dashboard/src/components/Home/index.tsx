@@ -3,6 +3,13 @@ import { HomeProps } from "../../interfaces/Props";
 import Products from "./Products";
 import Sidebar from "./Sidebar";
 
+const tabs = [
+	<Products />,
+	// <Categories />,
+	// <Orders />,
+	// <Users />	
+]
+
 const Home = (props: HomeProps) => {
 	useEffect(() => {
 		if (!props.cookies["ecommerce_user"]) props.navigate("/login")
@@ -14,10 +21,7 @@ const Home = (props: HomeProps) => {
 		<>
 			{<Sidebar setSelectedTab={setSelectedTab} />}
 			<div className="Home">
-				{selectedTab === 0 ? <Products /> : <></>}
-				{/* {selectedTab === 0 ? <Categories /> : <></>} */}
-				{/* {selectedTab === 0 ? <Orders /> : <></>} */}
-				{/* {selectedTab === 0 ? <Users /> : <></>} */}
+				{tabs[selectedTab]}
 			</div>
 		</>
 
