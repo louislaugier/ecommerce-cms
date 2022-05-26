@@ -5,7 +5,6 @@ import { IconType } from 'react-icons';
 import { BoxProps, FlexProps } from '@chakra-ui/react';
 import { User } from "./User";
 
-
 export interface LinkItemProps {
 	name: string,
 	icon: IconType
@@ -13,7 +12,8 @@ export interface LinkItemProps {
 
 export interface BarProps extends BoxProps {
 	onClose: () => void,
-	setSelectedTab: React.Dispatch<React.SetStateAction<number>>
+	setTab: React.Dispatch<React.SetStateAction<JSX.Element>>,
+	tabs: JSX.Element[]
 };
 
 export interface NavItemProps extends FlexProps {
@@ -25,7 +25,7 @@ export interface MobileProps extends FlexProps {
 	onOpen: () => void
 };
 
-export interface HomeProps {
+export interface BaseProps {
 	api: AxiosInstance,
 	navigate: NavigateFunction,
 	user: User | null,
@@ -34,7 +34,8 @@ export interface HomeProps {
 		ecommerce_bearer?: any
 	},
 	setIsErrorVisible: React.Dispatch<React.SetStateAction<boolean>>,
-	throwErr: (message: string, err?: any) => void
+	throwErr: (message: string, err?: any) => void,
+	removeCookie: (name: string, options?: CookieSetOptions | undefined) => void
 };
 
 export interface LoginProps {
@@ -54,5 +55,6 @@ export interface LoginProps {
 };
 
 export interface SidebarProps {
-	setSelectedTab: React.Dispatch<React.SetStateAction<number>>
+	setTab: React.Dispatch<React.SetStateAction<JSX.Element>>,
+	tabs: JSX.Element[]
 };

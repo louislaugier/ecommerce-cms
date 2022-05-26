@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
-import { HomeProps } from "../../interfaces/Props";
+import { BaseProps } from "../../interfaces/Props";
 import Products from "./Products";
+import Categories from "./Categories";
 import Sidebar from "./Sidebar";
 
-const tabs = [
+const tabs: JSX.Element[] = [
 	<Products />,
-	// <Categories />,
+	<Categories />,
 	// <Orders />,
 	// <Users />	
 ]
 
-const Home = (props: HomeProps) => {
-	useEffect(() => {
-		if (!props.cookies["ecommerce_user"]) props.navigate("/login")
-	}, [props]);
+const Home = (props: BaseProps) => {
+	const [tab, setTab] = useState<JSX.Element>(tabs[0]);
 
-	const [selectedTab, setSelectedTab] = useState(0)
+	useEffect(() => {
+		if (!props.cookies["ecommerce_user"]) props.navigate("/login");
+	}, [props]);
 
 	return (
 		<>
-			{<Sidebar setSelectedTab={setSelectedTab} />}
+			<Sidebar setTab={setTab} tabs={tabs}/>
 			<div className="Home">
-				{tabs[selectedTab]}
+				{tab}
 			</div>
 		</>
 

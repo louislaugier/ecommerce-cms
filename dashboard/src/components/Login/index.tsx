@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosInstance } from "axios";
-import { Flex, Box, FormControl, FormLabel, Input, Checkbox, Stack, Link, Button, Heading, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Box, FormControl, FormLabel, Input, Stack, Button, Heading, useColorModeValue } from "@chakra-ui/react";
 import { LoginProps } from "../../interfaces/Props";
 
 const Login = (props: LoginProps) => {
   useEffect(() => {
     if (props.cookies["ecommerce_user"]) props.navigate("/")
+    // eslint-disable-next-line
   }, []);
 
   const [email, setEmail] = useState<string | null>(null);
@@ -18,7 +19,7 @@ const Login = (props: LoginProps) => {
     else try {
       const apiWithoutPrefix: AxiosInstance = axios.create({ baseURL: (props.api.defaults.baseURL || "").replace("/v1", "") });
       const res = await apiWithoutPrefix.post("auth/local", { identifier: email, password });
-      if (res.data && res.data.user.isAdmin) {
+      if (res.data && res.data.user?.isAdmin) {
         props.setIsErrorVisible(false);
         props.setUser(res.data.user);
         props.updateBearer(res.data.jwt);

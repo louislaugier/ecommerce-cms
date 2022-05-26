@@ -8,3 +8,10 @@
 	position: 'absolute';
 	bottom: 0
 }
+
+@media only screen and (max-width: 767px) {
+	.Home {
+		top: 80px;
+		left: 0
+	}
+  }
