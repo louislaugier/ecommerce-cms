@@ -1,38 +1,32 @@
-import { useState, useEffect } from "react";
-import axios, { AxiosInstance } from "axios";
+import { useState } from "react";
 import { Flex, Box, FormControl, FormLabel, Input, Stack, Button, Heading, useColorModeValue } from "@chakra-ui/react";
 import { LoginProps } from "../../interfaces/Props";
 
-const Login = (props: LoginProps) => {
-  useEffect(() => {
-    if (props.cookies["ecommerce_user"]) props.navigate("/")
-    // eslint-disable-next-line
-  }, []);
+const Login = ({ navigate, isLoading, setIsLoading, throwErr, api, error, setError, setBearer, setCookie}: LoginProps) => {
 
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
 
   const login = async (): Promise<void> => {
-    props.setIsLoading(true);
-    if (!email) props.throwErr("No email provided");
-    else if (!password) props.throwErr("No password provided");
+    setIsLoading(true);
+    if (!email) throwErr("No email provided");
+    else if (!password) throwErr("No password provided");
     else try {
-      const apiWithoutPrefix: AxiosInstance = axios.create({ baseURL: (props.api.defaults.baseURL || "").replace("/v1", "") });
-      const res = await apiWithoutPrefix.post("auth/local", { identifier: email, password });
+      const res = await api.post("auth/local", { identifier: email, password });
       if (res.data && res.data.user?.isAdmin) {
-        props.setIsErrorVisible(false);
-        props.setUser(res.data.user);
-        props.updateBearer(res.data.jwt);
-        props.setCookie("ecommerce_jwt", res.data.jwt, { path: "/" });
-        props.setCookie("ecommerce_user", res.data.user.email, { path: "/" });
-        props.navigate("/");
+        if (error) setError(null);
+        setBearer(res.data.jwt);
+        setCookie("ecommerce_bearer", res.data.jwt, { path: "/" });
+        setCookie("ecommerce_user", res.data.user.email, { path: "/" });
+        navigate("/");
+        window.location.reload()
       }
     } catch (err: any) {
-      let msg: string = "Internal server error!";
-      if (err.response.status === 400) msg = "Incorrect login!";
-      props.throwErr(msg, err);
+      let msg: string = "Internal server error";
+      if (err.response.status === 400) msg = "Incorrect login";
+      throwErr(msg, err);
     }
-    props.setIsLoading(false);
+    setIsLoading(false);
   }
 
   return (
@@ -54,14 +48,15 @@ const Login = (props: LoginProps) => {
           <Stack spacing={4}>
             <FormControl id="email">
               <FormLabel>Email</FormLabel>
-              <Input onChange={(e) => setEmail(e.target.value)} type="email" />
+              <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} type="email" />
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input onChange={(e) => setPassword(e.target.value)} type="password" />
+              <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} type="password" />
             </FormControl>
             <Button
-              onClick={(e) => login()}
+              isLoading={isLoading}
+              onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => login()}
               style={{ marginTop: 25 }}
               bg={"blue.400"}
               color={"white"}

@@ -1,31 +1,40 @@
 import { useEffect, useState } from "react";
-import { BaseProps } from "../../interfaces/Props";
+import { HomeProps } from "../../interfaces/Props";
 import Products from "./Products";
 import Categories from "./Categories";
 import Sidebar from "./Sidebar";
 
-const tabs: JSX.Element[] = [
-	<Products />,
-	<Categories />,
-	// <Orders />,
-	// <Users />	
-]
-
-const Home = (props: BaseProps) => {
+const Home = (props: HomeProps) => {
+	const {setBearer, cookies, navigate} = props
+	const [isTokenLoaded, setIsTokenLoaded] = useState<boolean>(false)
+	useEffect(() => {
+		const token: string | null = cookies["ecommerce_bearer"]
+		if (!token) navigate("/login");
+		else {
+			setBearer(token)
+			setIsTokenLoaded(true)
+		}
+		// eslint-disable-next-line
+	}, [])
+	
+	const tabs: JSX.Element[] = [
+		<Products {...props}/>,
+		<Categories />,
+		// <Orders />,
+		// <Users />	
+	]
 	const [tab, setTab] = useState<JSX.Element>(tabs[0]);
 
-	useEffect(() => {
-		if (!props.cookies["ecommerce_user"]) props.navigate("/login");
-	}, [props]);
-
 	return (
-		<>
-			<Sidebar setTab={setTab} tabs={tabs}/>
-			<div className="Home">
-				{tab}
-			</div>
-		</>
-
+		isTokenLoaded ?
+			<>
+				<Sidebar setTab={setTab} tabs={tabs}/>
+				<div className="Home">
+					{tab}
+				</div>
+			</> 
+		:
+			<></>
 	);
 }
 

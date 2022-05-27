@@ -3,7 +3,34 @@ import { NavigateFunction } from "react-router-dom";
 import { CookieSetOptions } from "universal-cookie/cjs/types";
 import { IconType } from 'react-icons';
 import { BoxProps, FlexProps } from '@chakra-ui/react';
-import { User } from "./User";
+
+export interface Context {
+	navigate: NavigateFunction,
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+	isLoading: boolean,
+	api: AxiosInstance,
+	setBearer: (bearer: string) => string,
+	error: string | null,
+	setError: React.Dispatch<React.SetStateAction<string | null>>,
+	throwErr: (message: string, err?: any) => void
+};
+
+export interface LoginProps extends Context {
+	setCookie: (name: string, value: any, options?: CookieSetOptions | undefined) => void
+};
+
+export interface HomeProps extends Context {
+	cookies: {
+		ecommerce_user?: any,
+		ecommerce_bearer?: any
+	},
+	removeCookie: (name: string, options?: CookieSetOptions | undefined) => void
+};
+
+export interface SidebarProps {
+	setTab: React.Dispatch<React.SetStateAction<JSX.Element>>,
+	tabs: JSX.Element[]
+};
 
 export interface LinkItemProps {
 	name: string,
@@ -23,38 +50,4 @@ export interface NavItemProps extends FlexProps {
 
 export interface MobileProps extends FlexProps {
 	onOpen: () => void
-};
-
-export interface BaseProps {
-	api: AxiosInstance,
-	navigate: NavigateFunction,
-	user: User | null,
-	cookies: {
-		ecommerce_user?: any,
-		ecommerce_bearer?: any
-	},
-	setIsErrorVisible: React.Dispatch<React.SetStateAction<boolean>>,
-	throwErr: (message: string, err?: any) => void,
-	removeCookie: (name: string, options?: CookieSetOptions | undefined) => void
-};
-
-export interface LoginProps {
-	api: AxiosInstance,
-	updateBearer: (bearer: string) => string,
-	navigate: NavigateFunction,
-	setUser: React.Dispatch<React.SetStateAction<User | null>>,
-	cookies: {
-		ecommerce_user?: any,
-		ecommerce_bearer?: any
-	},
-	setCookie: (name: string, value: any, options?: CookieSetOptions | undefined) => void,
-	isLoading: boolean,
-	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-	setIsErrorVisible: React.Dispatch<React.SetStateAction<boolean>>,
-	throwErr: (message: string, err?: any) => void
-};
-
-export interface SidebarProps {
-	setTab: React.Dispatch<React.SetStateAction<JSX.Element>>,
-	tabs: JSX.Element[]
 };
