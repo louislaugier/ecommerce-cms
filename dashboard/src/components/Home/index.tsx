@@ -1,11 +1,35 @@
 import { useEffect, useState } from "react";
+
 import { HomeProps } from "../../interfaces/Props";
-import Products from "./Products";
-import Categories from "./Categories";
+
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+
 import Sidebar from "./Sidebar";
 
+import Products from "./tabs/Products";
+import Categories from "./tabs/Categories";
+import Orders from "./tabs/Orders";
+import Users from "./tabs/Users";
+
+const DrawerHeader = styled('div')(({ theme }: any) => ({
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'flex-end',
+	padding: theme.spacing(0, 1),
+	...theme.mixins.toolbar,
+}));
+
 const Home = (props: HomeProps) => {
-	const {setBearer, cookies, navigate} = props
+	const tabs: object = {
+		Products: <Products {...props}/>,
+		Categories: <Categories  {...props}/>,
+		Orders: <Orders  {...props}/>,
+		Users: <Users  {...props}/>	
+	}
+	const [tab, setTab] = useState<JSX.Element>(Object.values(tabs)[0]);
+
+	const { setBearer, cookies, navigate, removeCookie } = props
 	const [isTokenLoaded, setIsTokenLoaded] = useState<boolean>(false)
 	useEffect(() => {
 		const token: string | null = cookies["ecommerce_bearer"]
@@ -13,27 +37,23 @@ const Home = (props: HomeProps) => {
 		else {
 			setBearer(token)
 			setIsTokenLoaded(true)
+			navigate("/" + Object.keys(tabs)[0].toLowerCase())
 		}
 		// eslint-disable-next-line
 	}, [])
-	
-	const tabs: JSX.Element[] = [
-		<Products {...props}/>,
-		<Categories />,
-		// <Orders />,
-		// <Users />	
-	]
-	const [tab, setTab] = useState<JSX.Element>(tabs[0]);
 
 	return (
 		isTokenLoaded ?
 			<>
-				<Sidebar setTab={setTab} tabs={tabs}/>
-				<div className="Home">
-					{tab}
-				</div>
-			</> 
-		:
+				<Box sx={{ display: 'flex' }}>
+					<Sidebar tabs={tabs} setTab={setTab} DrawerHeader={DrawerHeader} navigate={navigate} removeCookie={removeCookie} setBearer={setBearer}/>
+					<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+						<DrawerHeader />
+						{tab}
+					</Box>
+				</Box>
+			</>
+			:
 			<></>
 	);
 }

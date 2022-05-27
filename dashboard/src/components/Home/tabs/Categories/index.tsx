@@ -1,8 +1,9 @@
+import { Typography } from "@mui/material";
 
 
 const Categories = (props: any) => {
 	return (
-		<>Categories</>
+		<Typography>Categories</Typography>
 	);
 }
 

@@ -1,15 +1,15 @@
-import "./App.css";
 import { useState } from "react"
 import { Routes, Route, useNavigate } from "react-router-dom";
 import axios, { AxiosInstance } from "axios";
 import { useCookies } from "react-cookie";
-import { Alert, AlertTitle, AlertIcon } from "@chakra-ui/react";
+
 import Login from "./components/Login";
 import Home from "./components/Home";
+
 import { Context } from "./interfaces/Props";
 
 const api: AxiosInstance = axios.create({ baseURL: "http://localhost:1337/api" });
-const setBearer = (bearer: string) => api.defaults.headers.common["Authorization"] = "Bearer " + bearer;
+const setBearer = (bearer: string | null) => api.defaults.headers.common["Authorization"] = bearer ? "Bearer " + bearer : '';
 
 const App = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const App = () => {
 
   const context: Context = { navigate, isLoading, setIsLoading, api, setBearer, throwErr, error, setError };
 
-  const home: JSX.Element = Home({...context, cookies, removeCookie});
+  const home: JSX.Element = Home({ ...context, cookies, removeCookie });
 
   return (
     <div className="App">
@@ -35,19 +35,19 @@ const App = () => {
         <Route path="/categories" element={home} />
         <Route path="/orders" element={home} />
         <Route path="/users" element={home} />
-        
-        <Route path="/login" element={Login({...context, setCookie})} />
+
+        <Route path="/login" element={Login({ ...context, setCookie })} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
 
-      {error ?
+      {/* {error ?
         <Alert className="Alert" status="error">
           <AlertIcon />
           <AlertTitle>{error}</AlertTitle>
         </Alert>
       : 
         <></>
-      }
+      } */}
 
     </div>
   );
