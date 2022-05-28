@@ -20,7 +20,7 @@ type Entity = Product
 const CustomTableCell = ({ row, name, updateRow }: any) => {
 	const { isEditMode } = row;
 	return (
-		<TableCell align="left">
+		<TableCell style={{maxWidth:200}} align="left">
 			{isEditMode ? (
 				<Input
 					value={row.attributes[name]}

@@ -19,3 +19,8 @@ interface Attributes {
 	salesPrice?: number,
 	category: Category,
 }
+
+export interface NewProductProps {
+	isVisible: boolean,
+	setIsVisible: React.Dispatch<React.SetStateAction<boolean>>
+}
