@@ -13,28 +13,27 @@ import EditIcon from "@mui/icons-material/EditOutlined";
 import DoneIcon from "@mui/icons-material/DoneAllTwoTone";
 import RevertIcon from "@mui/icons-material/NotInterestedOutlined";
 import { Product } from '../../../interfaces/Product';
-import { Category } from '../../../interfaces/Category';
 
 type Entity = Product
 
-const CustomTableCell = ({ row, name, onChange }: any) => {
+const CustomTableCell = ({ row, name, updateRow }: any) => {
 	const { isEditMode } = row;
 	return (
 		<TableCell align="left">
 			{isEditMode ? (
 				<Input
-					value={row[name]}
+					value={row.attributes[name]}
 					name={name}
-					onChange={e => onChange(e, row)}
+					onChange={e => updateRow(e, row)}
 				/>
 			) : (
-				row[name]
+				row.attributes[name]
 			)}
 		</TableCell>
 	);
 };
 
-const EditableTable = ({columns, rows}: any) => {
+const EditableTable = ({ columns, rows }: any) => {
 	let setRows: React.Dispatch<React.SetStateAction<any[]>>
 	[rows, setRows] = useState(rows);
 	const [previous, setPrevious]: any = useState({});
@@ -48,7 +47,7 @@ const EditableTable = ({columns, rows}: any) => {
 			});
 		});
 	};
-	const onChange = (e: any, row: any) => {
+	const updateRow = (e: any, row: any) => {
 		if (!previous[row.id]) {
 			setPrevious((state: any) => ({ ...state, [row.id]: row }));
 		}
@@ -80,8 +79,8 @@ const EditableTable = ({columns, rows}: any) => {
 
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
-	const handleChangePage = (event: unknown, newPage: number) => setPage(newPage);
-	const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const changePage = (event: unknown, newPage: number) => setPage(newPage);
+	const changeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setRowsPerPage(+event.target.value);
 		setPage(0);
 	};
@@ -92,7 +91,7 @@ const EditableTable = ({columns, rows}: any) => {
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
-							{columns.map((column: any) => (
+							{columns.map((column: any, i: number) => (
 								<TableCell
 									key={column.id}
 									align={column.align}
@@ -104,44 +103,42 @@ const EditableTable = ({columns, rows}: any) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{rows
-							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-							.map((row: any, i: number) => {
-								return (
-									<TableRow hover role="checkbox" tabIndex={-1} key={i}>
-										<TableCell>
-											{row.isEditMode ? (
-												<>
-													<IconButton
-														aria-label="done"
-														onClick={() => toggleEditMode(row.id)}
-													>
-														<DoneIcon />
-													</IconButton>
-													<IconButton
-														aria-label="revert"
-														onClick={() => revert(row.id)}
-													>
-														<RevertIcon />
-													</IconButton>
-												</>
-											) : (
+						{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, i: number) => {
+							return (
+								<TableRow hover role="checkbox" tabIndex={-1} key={i}>
+									<TableCell>
+										{row.isEditMode ? (
+											<>
 												<IconButton
-													aria-label="delete"
+													aria-label="done"
 													onClick={() => toggleEditMode(row.id)}
 												>
-													<EditIcon />
+													<DoneIcon />
 												</IconButton>
-											)}
-										</TableCell>
-										{
-											columns.map((column: any) => {
-												return <CustomTableCell {...{ row, name: column.id, onChange }} />
-											})
-										}
-									</TableRow>
-								);
-							})}
+												<IconButton
+													aria-label="revert"
+													onClick={() => revert(row.id)}
+												>
+													<RevertIcon />
+												</IconButton>
+											</>
+										) : (
+											<IconButton
+												aria-label="delete"
+												onClick={() => toggleEditMode(row.id)}
+											>
+												<EditIcon />
+											</IconButton>
+										)}
+									</TableCell>
+									{
+										columns.map((column: any, i: number) => {
+											return i ? <CustomTableCell key={i} {...{ row, name: column.id, updateRow }} /> : <></>
+										})
+									}
+								</TableRow>
+							);
+						})}
 					</TableBody>
 				</Table>
 			</TableContainer>
@@ -151,8 +148,8 @@ const EditableTable = ({columns, rows}: any) => {
 				count={rows.length}
 				rowsPerPage={rowsPerPage}
 				page={page}
-				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage}
+				onPageChange={changePage}
+				onRowsPerPageChange={changeRowsPerPage}
 			/>
 		</Paper>
 	);

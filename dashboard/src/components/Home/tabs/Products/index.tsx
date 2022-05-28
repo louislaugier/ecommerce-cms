@@ -7,9 +7,12 @@ import EditableTable from "../../tables/EditableTable";
 
 const Products = ({ api, throwErr }: Context) => {
 	const columns: readonly any[] = [
+		{ id: 'isEditMode', label: 'Actions', minWidth: 50 },
 		{ id: 'title', label: 'Title', minWidth: 50 },
 		{ id: 'description', label: 'Description', minWidth: 50 },
 		{ id: 'price', label: 'Price', minWidth: 50 },
+		{ id: 'stock', label: 'Stock', minWidth: 50 },
+		{ id: 'salePrice', label: 'Sale price', minWidth: 50 },
 	];
 
 	const [products, setProducts] = useState<Product[] | null | undefined>(null)
@@ -27,7 +30,7 @@ const Products = ({ api, throwErr }: Context) => {
 	}, [api, products, throwErr]);
 	
 	return (
-		<EditableTable columns={columns} rows={products}/>
+		products ? <EditableTable columns={columns} rows={products}/> : <></>
 	);
 }
 
