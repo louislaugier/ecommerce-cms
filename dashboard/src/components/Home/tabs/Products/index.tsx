@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 
+import { IconButton } from "@mui/material";
+
+import AddIcon from "@mui/icons-material/Add";
+
 import { Product } from "../../../../interfaces/Product";
 import { Context } from "../../../../interfaces/Props";
 
@@ -19,18 +23,27 @@ const Products = ({ api, throwErr }: Context) => {
 	useEffect(() => {
 		const getProducts = async (): Promise<void> => {
 			try {
-				const products: Product[] = (await api.get("products?populate[category][populate][0]=parentCategory")).data.data
-				for (let i = 0; i < products.length; i++) products[i].isEditMode = false
-				setProducts(products)
+				setProducts((await api.get("products?populate[category][populate][0]=parentCategory")).data.data)
+				// add category for each
 			} catch (err: any) {
 				throwErr("Error loading products", err);
 			}
 		}
 		if (!products) getProducts()
 	}, [api, products, throwErr]);
-	
+
 	return (
-		products ? <EditableTable columns={columns} rows={products}/> : <></>
+		<>
+			<IconButton
+				aria-label="add"
+				onClick={() => {}}
+				style={{marginBottom: 25}}
+			>
+				<AddIcon />
+			</IconButton>
+			{products ? <EditableTable columns={columns} rows={products} /> : <></>}
+		</>
+		
 	);
 }
 

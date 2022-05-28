@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { Input, TableContainer, TablePagination } from "@mui/material";
 import Table from "@mui/material/Table";
@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DoneIcon from "@mui/icons-material/DoneAllTwoTone";
 import RevertIcon from "@mui/icons-material/NotInterestedOutlined";
+
 import { Product } from '../../../interfaces/Product';
 
 type Entity = Product
@@ -133,7 +134,7 @@ const EditableTable = ({ columns, rows }: any) => {
 									</TableCell>
 									{
 										columns.map((column: any, i: number) => {
-											return i ? <CustomTableCell key={i} {...{ row, name: column.id, updateRow }} /> : <></>
+											return i ? <CustomTableCell key={i} {...{ row, name: column.id, updateRow }} /> : <Fragment key={i}></Fragment>
 										})
 									}
 								</TableRow>
